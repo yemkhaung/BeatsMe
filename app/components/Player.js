@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Text, View, StyleSheet, Animated } from "react-native";
+import { Text, View, StyleSheet, Animated, TouchableOpacity } from "react-native";
 import { playerBlack, borderBlack, beatsFont } from "../constants";
 import PlayerButton from "./PlayerButton";
 
@@ -26,10 +26,10 @@ export default class Player extends React.Component {
                             <Text style={styles.artistText}>Joe Jonas</Text>
                         </React.Fragment>
                     ) : (
-                        <React.Fragment>
+                        <TouchableOpacity onPress={this.props.onPressSent}>
                             <Text style={styles.titleText}>PLAY</Text>
                             <Text style={styles.titleText}>THE SENTENCE</Text>
-                        </React.Fragment>
+                        </TouchableOpacity>
                     )}
                 </View>
             </View>

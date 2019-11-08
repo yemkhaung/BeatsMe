@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Text, View, StyleSheet, Animated, TouchableOpacity } from "react-native";
-import { playerBlack, borderBlack, beatsFont } from "../constants";
+import { bgColorDarkBlack, borderBlack, beatsFont } from "../constants";
 import PlayerButton from "./PlayerButton";
 
 export default class Player extends React.Component {
@@ -20,7 +20,7 @@ export default class Player extends React.Component {
             <View style={styles.player}>
                 <PlayerButton isPlaying={this.state.isPlaying} onPress={this.handlePlay} />
                 <View style={styles.trackInfo}>
-                    {this.props.isTrackSelected ? (
+                    {this.props.playingTrack ? (
                         <React.Fragment>
                             <Text style={styles.titleText}>Gotta Find You</Text>
                             <Text style={styles.artistText}>Joe Jonas</Text>
@@ -49,12 +49,12 @@ const styles = StyleSheet.create({
     player: {
         borderTopColor: borderBlack,
         borderTopWidth: 1,
-        backgroundColor: playerBlack,
+        backgroundColor: bgColorDarkBlack,
         padding: 16,
         flexDirection: "row"
     },
     arrow: {
-        backgroundColor: playerBlack,
+        backgroundColor: bgColorDarkBlack,
         width: 22,
         height: 22,
         position: "absolute",

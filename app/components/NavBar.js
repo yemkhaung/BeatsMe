@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
         backgroundColor: bgColorBlack,
         borderBottomColor: borderBlack,
         borderBottomWidth: 1,
-        marginTop: 20
+        marginTop: 30
     },
     logo: {
         width: logoSize,

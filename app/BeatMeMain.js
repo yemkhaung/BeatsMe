@@ -14,11 +14,12 @@ import TabBar from "./components/TabBar";
 import Sentence from "./components/Sentence";
 import Player from "./components/Player";
 import words from "../assets/data/wordsWithGenres";
+import PlayList from "./components/PlayList";
 
 export default class BeatMeMain extends React.Component {
     state = {
         fontLoaded: false,
-        wordChoiceIndices: [0, 0, 0, 0],
+        wordChoiceIndices: [0, 0, 0, 0]
     };
 
     constructor(props) {
@@ -28,12 +29,14 @@ export default class BeatMeMain extends React.Component {
                 geometric_black: require("../assets/fonts/Geometric_706_Black_BT.ttf")
             });
             this.setState({
-                fontLoaded: true
+                tracks: null,
+                fontLoaded: true,
+                playingTrack: null
             });
         })();
     }
 
-    getHighestScoreId = (genreMap) => {
+    getHighestScoreId = genreMap => {
         let highestScoreId = null;
         let highestScore = 0;
 
@@ -55,7 +58,7 @@ export default class BeatMeMain extends React.Component {
         console.log("highestScoreId " + highestScoreId);
         console.log("highestScore " + highestScore);
         return highestScoreId;
-    }
+    };
 
     handleSentence = () => {
         let genreMap0 = words[0][this.state.wordChoiceIndices[0]].genreMap;
@@ -64,17 +67,17 @@ export default class BeatMeMain extends React.Component {
         let genreMap3 = words[3][this.state.wordChoiceIndices[3]].genreMap;
 
         let first3GenreMap = [].concat.apply([], [genreMap0, genreMap1, genreMap2]);
-        console.log("first3GenreMap >>> ", first3GenreMap)
+        // console.log("first3GenreMap >>> ", first3GenreMap);
 
         fetch(
             "https://api.napster.com/v2.2/genres/" +
-                getHighestScoreId(genreMap3) +
+                this.getHighestScoreId(genreMap3) +
                 "," +
-                getHighestScoreId(first3GenreMap) +
+                this.getHighestScoreId(first3GenreMap) +
                 "/tracks/top?apikey=NzJiMTMzYjQtZDUwMi00ODU1LTljNTYtYWQzODM5YTI0ZGQ2"
         ).then(data => {
             data.json().then(dataJSON => {
-                console.log("Napster API dataJSON", dataJSON);
+                console.log("Napster API dataJSON [0] >>> ", dataJSON.tracks[0]);
                 this.setState({ tracks: dataJSON.tracks });
                 // Animated.timing(this.state.isPlaylistViewVisible, {
                 //     toValue: 0,
@@ -94,8 +97,11 @@ export default class BeatMeMain extends React.Component {
                     <View style={styles.wrapper}>
                         <NavBar />
                         <TabBar />
-                        <Sentence />
-                        <Player isTrackSelected={false} onPressSent={this.handleSentence} />
+                        {this.state.tracks ? <PlayList tracks={this.state.tracks} /> : <Sentence />}
+                        <Player
+                            playingTrack={this.state.playingTrack}
+                            onPressSent={this.handleSentence}
+                        />
                     </View>
                 ) : (
                     <ActivityIndicator animating />

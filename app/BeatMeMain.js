@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { bgColorBlack } from "./constants";
 import NavBar from "./components/NavBar";
-import TabBar from "./components/TabBar";
 import Sentence from "./components/Sentence";
 import Player from "./components/Player";
 import words from "../assets/data/wordsWithGenres";
@@ -94,30 +93,35 @@ export default class BeatMeMain extends React.Component {
         });
     };
 
-    render = () => (
-        <View style={styles.container}>
-            <SafeAreaView>
-                <StatusBar barStyle="light-content" />
-                {this.state.fontLoaded ? (
-                    <View style={styles.wrapper}>
-                        <NavBar />
-                        <TabBar />
-                        {this.state.tracks ? (
-                            <PlayList tracks={this.state.tracks} onSetTrack={this.setTrack} />
-                        ) : (
-                            <Sentence />
-                        )}
-                        <Player
-                            playingTrack={this.state.playingTrack}
-                            onPressSent={this.handleSentence}
-                        />
-                    </View>
-                ) : (
-                    <ActivityIndicator animating />
-                )}
-            </SafeAreaView>
-        </View>
-    );
+    render = () => {
+        return (
+            <View style={styles.container}>
+                <SafeAreaView>
+                    <StatusBar barStyle="light-content" />
+                    {this.state.fontLoaded ? (
+                        <View style={styles.wrapper}>
+                            <NavBar />
+                            {this.state.tracks ? (
+                                <PlayList
+                                    wordChoices={this.state.wordChoiceIndices}
+                                    tracks={this.state.tracks}
+                                    onSetTrack={this.setTrack}
+                                />
+                            ) : (
+                                <Sentence wordChoices={this.state.wordChoiceIndices} />
+                            )}
+                            <Player
+                                playingTrack={this.state.playingTrack}
+                                onPressSent={this.handleSentence}
+                            />
+                        </View>
+                    ) : (
+                        <ActivityIndicator animating />
+                    )}
+                </SafeAreaView>
+            </View>
+        );
+    };
 }
 
 const { height, width } = Dimensions.get("screen");

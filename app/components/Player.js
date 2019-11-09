@@ -6,7 +6,6 @@ import PlayButton from "./PlayButton";
 
 export default class Player extends React.Component {
     audioInstance = null;
-    playingTrack = null;
 
     state = {
         isPlaying: false
@@ -39,7 +38,6 @@ export default class Player extends React.Component {
 
     componentWillReceiveProps = nextProps => {
         if (nextProps.playingTrack != null) {
-            this.playingTrack = nextProps.playingTrack;
             const songUrl = nextProps.playingTrack.previewURL;
             if (this.audioInstance != null) {
                 this.audioInstance.unloadAsync().then(status => this.startAudio(songUrl));
@@ -59,7 +57,7 @@ export default class Player extends React.Component {
         console.log("Playing Track >>> ", url);
         this.audioInstance = new Audio.Sound();
         this.audioInstance
-            .loadAsync({ uri: url })
+            .loadAsync({ uri: url }, { progressUpdateIntervalMillis: 0 })
             .then(status => this.audioInstance.playAsync())
             .then(status => this.setState({ isPlaying: true }))
             .catch(error => {
@@ -72,10 +70,12 @@ export default class Player extends React.Component {
             <View style={styles.player}>
                 <PlayButton isPlaying={this.state.isPlaying} onPress={this.handlePlay} />
                 <View style={styles.trackInfo}>
-                    {this.playingTrack ? (
+                    {this.props.playingTrack ? (
                         <React.Fragment>
-                            <Text style={styles.titleText}>{this.playingTrack.name}</Text>
-                            <Text style={styles.artistText}>{this.playingTrack.artistName}</Text>
+                            <Text style={styles.titleText}>{this.props.playingTrack.name}</Text>
+                            <Text style={styles.artistText}>
+                                {this.props.playingTrack.artistName}
+                            </Text>
                         </React.Fragment>
                     ) : (
                         <TouchableOpacity onPress={this.props.onPressSent}>

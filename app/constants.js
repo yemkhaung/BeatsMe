@@ -20,7 +20,12 @@ export const globalStyles = StyleSheet.create({
         fontSize: fontSize,
         color: "white",
         fontWeight: "900",
-        fontFamily: beatsFont,
-        textAlign: "center"
+        fontFamily: beatsFont
+    },
+    fadeText: {
+        opacity: 0.66,
+        marginTop: 4,
+        marginBottom: 4,
+        paddingHorizontal: 10
     }
 });

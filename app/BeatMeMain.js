@@ -19,7 +19,9 @@ import PlayList from "./components/PlayList";
 export default class BeatMeMain extends React.Component {
     state = {
         fontLoaded: false,
-        wordChoiceIndices: [0, 0, 0, 0]
+        wordChoiceIndices: [0, 0, 0, 0],
+        tracks: null,
+        playingTrack: null
     };
 
     constructor(props) {
@@ -29,9 +31,7 @@ export default class BeatMeMain extends React.Component {
                 geometric_black: require("../assets/fonts/Geometric_706_Black_BT.ttf")
             });
             this.setState({
-                tracks: null,
-                fontLoaded: true,
-                playingTrack: null
+                fontLoaded: true
             });
         })();
     }
@@ -77,7 +77,6 @@ export default class BeatMeMain extends React.Component {
                 "/tracks/top?apikey=NzJiMTMzYjQtZDUwMi00ODU1LTljNTYtYWQzODM5YTI0ZGQ2"
         ).then(data => {
             data.json().then(dataJSON => {
-                console.log("Napster API dataJSON [0] >>> ", dataJSON.tracks[0]);
                 this.setState({ tracks: dataJSON.tracks });
                 // Animated.timing(this.state.isPlaylistViewVisible, {
                 //     toValue: 0,
@@ -89,6 +88,12 @@ export default class BeatMeMain extends React.Component {
         });
     };
 
+    setTrack = track => {
+        this.setState({
+            playingTrack: track
+        });
+    };
+
     render = () => (
         <View style={styles.container}>
             <SafeAreaView>
@@ -97,7 +102,11 @@ export default class BeatMeMain extends React.Component {
                     <View style={styles.wrapper}>
                         <NavBar />
                         <TabBar />
-                        {this.state.tracks ? <PlayList tracks={this.state.tracks} /> : <Sentence />}
+                        {this.state.tracks ? (
+                            <PlayList tracks={this.state.tracks} onSetTrack={this.setTrack} />
+                        ) : (
+                            <Sentence />
+                        )}
                         <Player
                             playingTrack={this.state.playingTrack}
                             onPressSent={this.handleSentence}

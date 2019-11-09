@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { globalStyles, bgColorBlack } from "../constants";
-import ColorText from "./ColorText";
+import ColorText from "./MadLibText";
 
 export default class Sentence extends React.Component {
     render = () => (

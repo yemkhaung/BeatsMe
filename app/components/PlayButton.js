@@ -5,7 +5,7 @@ import Svg from "react-native-svg";
 import { MaterialIcons } from "@expo/vector-icons";
 import { playerSize } from "../constants";
 
-const PlayerButton = props => (
+const PlayButton = props => (
     <TouchableOpacity onPress={props.onPress}>
         <View style={styles.playButton}>
             {props.isPlaying ? (
@@ -30,4 +30,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default PlayerButton;
+export default PlayButton;

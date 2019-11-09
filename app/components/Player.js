@@ -1,29 +1,81 @@
 import React from "react";
-
+import { Audio } from "expo-av";
 import { Text, View, StyleSheet, Animated, TouchableOpacity } from "react-native";
 import { bgColorDarkBlack, borderBlack, beatsFont } from "../constants";
-import PlayerButton from "./PlayerButton";
+import PlayButton from "./PlayButton";
 
 export default class Player extends React.Component {
+    audioInstance = null;
+    playingTrack = null;
+
     state = {
-        isPlaying: true
+        isPlaying: false
     };
 
     handlePlay = () => {
-        this.setState(prevState => ({
-            isPlaying: !prevState.isPlaying
-        }));
+        if (this.audioInstance == null) {
+            return;
+        }
+        if (this.state.isPlaying) {
+            this.audioInstance
+                .pauseAsync()
+                .then(status => {
+                    this.setState(prevState => ({
+                        isPlaying: !prevState.isPlaying
+                    }));
+                })
+                .catch(err => console.error(err));
+        } else {
+            this.audioInstance
+                .playAsync()
+                .then(status => {
+                    this.setState(prevState => ({
+                        isPlaying: !prevState.isPlaying
+                    }));
+                })
+                .catch(err => console.error(err));
+        }
+    };
+
+    componentWillReceiveProps = nextProps => {
+        if (nextProps.playingTrack != null) {
+            this.playingTrack = nextProps.playingTrack;
+            const songUrl = nextProps.playingTrack.previewURL;
+            if (this.audioInstance != null) {
+                this.audioInstance.unloadAsync().then(status => this.startAudio(songUrl));
+            } else {
+                this.startAudio(songUrl);
+            }
+        }
+    };
+
+    componentWillUnmount() {
+        if (this.audioInstance != null) {
+            this.audioInstance.unloadAsync();
+        }
+    }
+
+    startAudio = url => {
+        console.log("Playing Track >>> ", url);
+        this.audioInstance = new Audio.Sound();
+        this.audioInstance
+            .loadAsync({ uri: url })
+            .then(status => this.audioInstance.playAsync())
+            .then(status => this.setState({ isPlaying: true }))
+            .catch(error => {
+                console.error(error);
+            });
     };
 
     render = () => (
         <Animated.View style={styles.container}>
             <View style={styles.player}>
-                <PlayerButton isPlaying={this.state.isPlaying} onPress={this.handlePlay} />
+                <PlayButton isPlaying={this.state.isPlaying} onPress={this.handlePlay} />
                 <View style={styles.trackInfo}>
-                    {this.props.playingTrack ? (
+                    {this.playingTrack ? (
                         <React.Fragment>
-                            <Text style={styles.titleText}>Gotta Find You</Text>
-                            <Text style={styles.artistText}>Joe Jonas</Text>
+                            <Text style={styles.titleText}>{this.playingTrack.name}</Text>
+                            <Text style={styles.artistText}>{this.playingTrack.artistName}</Text>
                         </React.Fragment>
                     ) : (
                         <TouchableOpacity onPress={this.props.onPressSent}>
@@ -78,10 +130,8 @@ const styles = StyleSheet.create({
         fontSize: 24
     },
     artistText: {
-        fontFamily: beatsFont,
         color: "#fff",
-        fontSize: 14,
-        opacity: 0.7,
-        marginLeft: 4
+        fontSize: 12,
+        opacity: 0.7
     }
 });

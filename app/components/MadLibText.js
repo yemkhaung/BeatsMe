@@ -2,7 +2,7 @@ import React from "react";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import { globalStyles } from "../constants";
 
-const ColorText = props => (
+const MadLibText = props => (
     <TouchableOpacity>
         <Text style={[globalStyles.beatsText, styles.text, { backgroundColor: props.bgColor }]}>
             {props.children}
@@ -19,4 +19,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ColorText;
+export default MadLibText;

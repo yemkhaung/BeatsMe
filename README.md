@@ -1,11 +1,17 @@
 # BeatsMe
 
-A **Beats Music** inspired **The Sentence** rework
+Songs are the best when they reflect listener's mood and surrounding places.
 
-# Tech
+The app suggests playlists via inputs of your mood, surroundings, etc.
 
-* React Native, Javascript hybrid mobile app development framework
-* Expo, platform with powerful tools for rapid ReactNative development
+A Music Player inspired by **The Sentence** feature from old **Beats** music platform.
+
+
+# DevTools & Framework
+
+* **ReactNative**, Javascript hybrid mobile app development framework
+* **Expo**, platform with powerful tools for rapid ReactNative development
+* `expo-av` Expo built-in audio-video player
 
 # Running the app
 

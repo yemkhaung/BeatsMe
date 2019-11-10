@@ -11,74 +11,75 @@ export default class Player extends React.Component {
         isPlaying: false
     };
 
-    handlePlay = () => {
-        if (this.audioInstance == null) {
-            return;
-        }
-        if (this.state.isPlaying) {
-            this.audioInstance
-                .pauseAsync()
-                .then(status => {
-                    this.setState(prevState => ({
-                        isPlaying: !prevState.isPlaying
-                    }));
-                })
-                .catch(err => console.error(err));
-        } else {
-            this.audioInstance
-                .playAsync()
-                .then(status => {
-                    this.setState(prevState => ({
-                        isPlaying: !prevState.isPlaying
-                    }));
-                })
-                .catch(err => console.error(err));
-        }
-    };
-
     componentWillReceiveProps = nextProps => {
         if (nextProps.playingTrack != null) {
             const songUrl = nextProps.playingTrack.previewURL;
             if (this.audioInstance != null) {
-                this.audioInstance.unloadAsync().then(status => this.startAudio(songUrl));
+                this.audioInstance.unloadAsync().then(status => this._startAudio(songUrl));
             } else {
-                this.startAudio(songUrl);
+                this._startAudio(songUrl);
             }
         }
     };
 
     componentWillUnmount() {
         if (this.audioInstance != null) {
-            this.audioInstance.unloadAsync();
+            this.audioInstance.stopAndUnloadAsync();
         }
     }
 
-    startAudio = url => {
+    _handlePlayback = () => {
+        if (this.audioInstance == null) {
+            return;
+        }
+        if (this.state.isPlaying) {
+            this.setState({ isPlaying: false });
+            this.audioInstance.pauseAsync().catch(err => console.error(err));
+        } else {
+            this.setState({ isPlaying: true });
+            this.audioInstance.playAsync().catch(err => console.error(err));
+        }
+    };
+
+    _startAudio = url => {
         console.log("Playing Track >>> ", url);
         this.audioInstance = new Audio.Sound();
         this.audioInstance
-            .loadAsync({ uri: url }, { progressUpdateIntervalMillis: 0 })
-            .then(status => this.audioInstance.playAsync())
-            .then(status => this.setState({ isPlaying: true }))
+            .loadAsync({ uri: url }, { progressUpdateIntervalMillis: 50 })
+            .then(status => {
+                this.setState({ isPlaying: true });
+                return this.audioInstance.playAsync();
+            })
+            .then(status => {
+                this.audioInstance.setOnPlaybackStatusUpdate(this._updatePlayback);
+            })
             .catch(error => {
                 console.error(error);
             });
     };
 
+    _updatePlayback = status => {
+        if (status.didJustFinish && !status.isLooping) {
+            this.setState({ isPlaying: false });
+        }
+    };
+
     render = () => (
         <Animated.View style={styles.container}>
             <View style={styles.player}>
-                <PlayButton isPlaying={this.state.isPlaying} onPress={this.handlePlay} />
+                <PlayButton isPlaying={this.state.isPlaying} onPress={this._handlePlayback} />
                 <View style={styles.trackInfo}>
                     {this.props.playingTrack ? (
                         <React.Fragment>
-                            <Text style={styles.titleText}>{this.props.playingTrack.name}</Text>
-                            <Text style={styles.artistText}>
+                            <Text numberOfLines={1} style={styles.titleText}>
+                                {this.props.playingTrack.name}
+                            </Text>
+                            <Text numberOfLines={1} style={styles.artistText}>
                                 {this.props.playingTrack.artistName}
                             </Text>
                         </React.Fragment>
                     ) : (
-                        <TouchableOpacity onPress={this.props.onPressSent}>
+                        <TouchableOpacity onPress={this.props.onPressSentence}>
                             <Text style={styles.titleText}>PLAY</Text>
                             <Text style={styles.titleText}>THE SENTENCE</Text>
                         </TouchableOpacity>

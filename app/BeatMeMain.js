@@ -35,7 +35,7 @@ export default class BeatMeMain extends React.Component {
         })();
     }
 
-    getHighestScoreId = genreMap => {
+    _getHighestScoreId = genreMap => {
         let highestScoreId = null;
         let highestScore = 0;
 
@@ -59,7 +59,7 @@ export default class BeatMeMain extends React.Component {
         return highestScoreId;
     };
 
-    handleSentence = () => {
+    _handleSentence = () => {
         let genreMap0 = words[0][this.state.wordChoiceIndices[0]].genreMap;
         let genreMap1 = words[1][this.state.wordChoiceIndices[1]].genreMap;
         let genreMap2 = words[2][this.state.wordChoiceIndices[2]].genreMap;
@@ -70,9 +70,9 @@ export default class BeatMeMain extends React.Component {
 
         fetch(
             "https://api.napster.com/v2.2/genres/" +
-                this.getHighestScoreId(genreMap3) +
+                this._getHighestScoreId(genreMap3) +
                 "," +
-                this.getHighestScoreId(first3GenreMap) +
+                this._getHighestScoreId(first3GenreMap) +
                 "/tracks/top?apikey=NzJiMTMzYjQtZDUwMi00ODU1LTljNTYtYWQzODM5YTI0ZGQ2"
         ).then(data => {
             data.json().then(dataJSON => {
@@ -87,9 +87,15 @@ export default class BeatMeMain extends React.Component {
         });
     };
 
-    setTrack = track => {
+    _setPlaybackTrack = track => {
         this.setState({
             playingTrack: track
+        });
+    };
+
+    _hidePLayerPlayList = () => {
+        this.setState({
+            tracks: null
         });
     };
 
@@ -105,14 +111,15 @@ export default class BeatMeMain extends React.Component {
                                 <PlayList
                                     wordChoices={this.state.wordChoiceIndices}
                                     tracks={this.state.tracks}
-                                    onSetTrack={this.setTrack}
+                                    onSetPlaybackTrack={this._setPlaybackTrack}
+                                    onHide={this._hidePLayerPlayList}
                                 />
                             ) : (
                                 <Sentence wordChoices={this.state.wordChoiceIndices} />
                             )}
                             <Player
                                 playingTrack={this.state.playingTrack}
-                                onPressSent={this.handleSentence}
+                                onPressSentence={this._handleSentence}
                             />
                         </View>
                     ) : (

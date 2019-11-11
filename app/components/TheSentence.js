@@ -5,25 +5,25 @@ import MadLibText from "./MadLibText";
 import TabBar from "./TabBar";
 import words from "../../assets/data/wordsWithGenres";
 
-export default class Sentence extends React.Component {
+export default class TheSentence extends React.Component {
     render = () => (
         <React.Fragment>
             <TabBar />
             <View style={styles.container}>
                 <Text style={[globalStyles.beatsText, globalStyles.fadeText]}>I'M</Text>
-                <MadLibText bgColor={"#DE2240"}>
+                <MadLibText bgColor={"#DE2240"} onPress={() => this.props.onEditSentence(0)}>
                     {words[0][this.props.wordChoices[0]].name}
                 </MadLibText>
                 <Text style={[globalStyles.beatsText, globalStyles.fadeText]}>&amp; FEEL LIKE</Text>
-                <MadLibText bgColor={"#C22452"}>
+                <MadLibText bgColor={"#C22452"} onPress={() => this.props.onEditSentence(1)}>
                     {words[1][this.props.wordChoices[1]].name}
                 </MadLibText>
                 <Text style={[globalStyles.beatsText, globalStyles.fadeText]}>WITH</Text>
-                <MadLibText bgColor={"#A22464"}>
+                <MadLibText bgColor={"#A22464"} onPress={() => this.props.onEditSentence(2)}>
                     {words[2][this.props.wordChoices[2]].name}
                 </MadLibText>
                 <Text style={[globalStyles.beatsText, globalStyles.fadeText]}>TO</Text>
-                <MadLibText bgColor={"#832879"}>
+                <MadLibText bgColor={"#832879"} onPress={() => this.props.onEditSentence(3)}>
                     {words[3][this.props.wordChoices[3]].name}
                 </MadLibText>
             </View>

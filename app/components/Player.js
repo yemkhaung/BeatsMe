@@ -19,13 +19,13 @@ export default class Player extends React.Component {
             } else {
                 this._startAudio(songUrl);
             }
+        } else {
+            this._stopTrack();
         }
     };
 
     componentWillUnmount() {
-        if (this.audioInstance != null) {
-            this.audioInstance.stopAndUnloadAsync();
-        }
+        this._stopTrack();
     }
 
     _handlePlayback = () => {
@@ -56,6 +56,13 @@ export default class Player extends React.Component {
             .catch(error => {
                 console.error(error);
             });
+    };
+
+    _stopTrack = () => {
+        if (this.audioInstance != null) {
+            this.setState({ isPlaying: false });
+            this.audioInstance.stopAsync().then(() => this.audioInstance.unloadAsync());
+        }
     };
 
     _updatePlayback = status => {

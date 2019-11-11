@@ -3,7 +3,7 @@ import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import { globalStyles } from "../constants";
 
 const MadLibText = props => (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={props.onPress}>
         <Text style={[globalStyles.beatsText, styles.text, { backgroundColor: props.bgColor }]}>
             {props.children}
         </Text>

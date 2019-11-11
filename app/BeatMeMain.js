@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { bgColorBlack } from "./constants";
 import NavBar from "./components/NavBar";
-import Sentence from "./components/Sentence";
+import TheSentence from "./components/TheSentence";
 import Player from "./components/Player";
 import words from "../assets/data/wordsWithGenres";
 import PlayList from "./components/PlayList";
@@ -18,6 +18,7 @@ import PlayList from "./components/PlayList";
 export default class BeatMeMain extends React.Component {
     state = {
         fontLoaded: false,
+        editWordIndex: null,
         wordChoiceIndices: [0, 0, 0, 0],
         tracks: null,
         playingTrack: null
@@ -59,7 +60,7 @@ export default class BeatMeMain extends React.Component {
         return highestScoreId;
     };
 
-    _handleSentence = () => {
+    _loadSentence = () => {
         let genreMap0 = words[0][this.state.wordChoiceIndices[0]].genreMap;
         let genreMap1 = words[1][this.state.wordChoiceIndices[1]].genreMap;
         let genreMap2 = words[2][this.state.wordChoiceIndices[2]].genreMap;
@@ -87,6 +88,12 @@ export default class BeatMeMain extends React.Component {
         });
     };
 
+    _editSentence = index => {
+        this.setState({
+            editWordIndex: index
+        });
+    };
+
     _setPlaybackTrack = track => {
         this.setState({
             playingTrack: track
@@ -95,6 +102,7 @@ export default class BeatMeMain extends React.Component {
 
     _hidePLayerPlayList = () => {
         this.setState({
+            playingTrack: null,
             tracks: null
         });
     };
@@ -115,11 +123,11 @@ export default class BeatMeMain extends React.Component {
                                     onHide={this._hidePLayerPlayList}
                                 />
                             ) : (
-                                <Sentence wordChoices={this.state.wordChoiceIndices} />
+                                <TheSentence wordChoices={this.state.wordChoiceIndices} onEditSentence={this._editSentence} />
                             )}
                             <Player
                                 playingTrack={this.state.playingTrack}
-                                onPressSentence={this._handleSentence}
+                                onPressSentence={this._loadSentence}
                             />
                         </View>
                     ) : (

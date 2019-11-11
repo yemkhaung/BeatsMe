@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "chroma-js": "^2.1.0",
     "expo": "^35.0.0",
     "expo-av": "^7.0.1",
     "react": "16.8.3",

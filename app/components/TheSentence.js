@@ -1,32 +1,50 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { globalStyles, bgColorBlack } from "../constants";
+import chroma from "chroma-js";
+
+import {
+    globalStyles,
+    bgColorBlack,
+    secondaryColor,
+    primaryColor,
+    descriptors
+} from "../constants";
 import MadLibText from "./MadLibText";
 import TabBar from "./TabBar";
 import words from "../../assets/data/wordsWithGenres";
 
 export default class TheSentence extends React.Component {
+    renderMadLibs = () => {
+        const { editWordIndex, wordChoices, onEditSentence } = this.props;
+        if (editWordIndex) {
+            // render word list suggestions
+        } else {
+            let views = [];
+            let colorScale = chroma.scale([primaryColor, secondaryColor]).colors(4);
+            words.forEach((wordList, index) => {
+                views.push(
+                    <Text
+                        key={`dt-${index}`}
+                        style={[globalStyles.beatsText, globalStyles.fadeText]}
+                    >
+                        {descriptors[index]}
+                    </Text>,
+                    <MadLibText
+                        key={`mt-${index}`}
+                        bgColor={colorScale[index]}
+                        onPress={() => onEditSentence(index)}
+                    >
+                        {wordList[wordChoices[index]].name}
+                    </MadLibText>
+                );
+            });
+            return <View style={styles.container}>{views}</View>;
+        }
+    };
     render = () => (
         <React.Fragment>
             <TabBar />
-            <View style={styles.container}>
-                <Text style={[globalStyles.beatsText, globalStyles.fadeText]}>I'M</Text>
-                <MadLibText bgColor={"#DE2240"} onPress={() => this.props.onEditSentence(0)}>
-                    {words[0][this.props.wordChoices[0]].name}
-                </MadLibText>
-                <Text style={[globalStyles.beatsText, globalStyles.fadeText]}>&amp; FEEL LIKE</Text>
-                <MadLibText bgColor={"#C22452"} onPress={() => this.props.onEditSentence(1)}>
-                    {words[1][this.props.wordChoices[1]].name}
-                </MadLibText>
-                <Text style={[globalStyles.beatsText, globalStyles.fadeText]}>WITH</Text>
-                <MadLibText bgColor={"#A22464"} onPress={() => this.props.onEditSentence(2)}>
-                    {words[2][this.props.wordChoices[2]].name}
-                </MadLibText>
-                <Text style={[globalStyles.beatsText, globalStyles.fadeText]}>TO</Text>
-                <MadLibText bgColor={"#832879"} onPress={() => this.props.onEditSentence(3)}>
-                    {words[3][this.props.wordChoices[3]].name}
-                </MadLibText>
-            </View>
+            {this.renderMadLibs()}
         </React.Fragment>
     );
 }

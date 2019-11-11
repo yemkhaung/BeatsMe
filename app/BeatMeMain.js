@@ -115,7 +115,8 @@ export default class BeatMeMain extends React.Component {
     _hidePLayerPlayList = () => {
         this.setState({
             playingTrack: null,
-            tracks: null
+            tracks: null,
+            editWordIndex: null
         });
     };
 

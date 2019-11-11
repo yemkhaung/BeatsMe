@@ -61,7 +61,7 @@ export default class Player extends React.Component {
     _stopTrack = () => {
         if (this.audioInstance != null) {
             this.setState({ isPlaying: false });
-            this.audioInstance.stopAsync().then(() => this.audioInstance.unloadAsync());
+            this.audioInstance.stopAsync();
         }
     };
 

@@ -1,12 +1,18 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, ScrollView, StyleSheet } from "react-native";
 
 const FlipList = props => {
     return (
-        <View>
+        <ScrollView style={styles.container}>
             {props.children}
-        </View>
-    )
-}
+        </ScrollView>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        marginBottom: 200
+    }
+});
 
 export default FlipList;

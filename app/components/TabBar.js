@@ -15,7 +15,7 @@ const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
     container: {
-        paddingVertical: 32,
+        paddingVertical: 22,
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#000",
@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
     },
     arrow: {
         backgroundColor: bgColorBlack,
-        width: 22,
-        height: 22,
+        width: 18,
+        height: 18,
         color: bgColorBlack,
         position: "absolute",
         bottom: -10,

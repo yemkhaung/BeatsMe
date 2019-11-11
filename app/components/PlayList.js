@@ -22,7 +22,7 @@ const PlayList = props => {
                     </Text>
                 </View>
             </TouchableOpacity>
-            <ScrollView style-={styles.container}>
+            <ScrollView style={styles.container}>
                 {tracks.map(track => (
                     <TouchableOpacity
                         key={track.id}
@@ -55,7 +55,8 @@ const PlayList = props => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: "column"
+        flexDirection: "column",
+        marginBottom: 100
     },
     sentenceContainer: {
         paddingVertical: 22,

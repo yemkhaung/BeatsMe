@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from "react-native";
 import chroma from "chroma-js";
 
 import {
@@ -12,14 +12,38 @@ import {
 import MadLibText from "./MadLibText";
 import TabBar from "./TabBar";
 import words from "../../assets/data/wordsWithGenres";
+import FlipList from "./FlipList";
 
 export default class TheSentence extends React.Component {
     renderMadLibs = () => {
-        const { editWordIndex, wordChoices, onEditSentence } = this.props;
-        if (editWordIndex) {
-            // render word list suggestions
+        const { editWordIndex, wordChoices, onChooseWord, onEditSentence } = this.props;
+        let views = [];
+
+        if (editWordIndex != null) {
+            // render word list suggestions for editing MadLib
+            const wordList = words[editWordIndex];
+            let colorScale = chroma.scale([primaryColor, secondaryColor]).colors(wordList.length);
+            views.push(
+                <Text
+                    key={`dt-${editWordIndex}`}
+                    style={[globalStyles.beatsText, globalStyles.fadeText]}
+                >
+                    {descriptors[editWordIndex]}
+                </Text>
+            );
+            wordList.forEach((word, index) => {
+                views.push(
+                    <MadLibText
+                        key={`mt-${index}`}
+                        bgColor={colorScale[index]}
+                        onPress={() => onChooseWord(index)}
+                    >
+                        {word.name}
+                    </MadLibText>
+                );
+            });
         } else {
-            let views = [];
+            // render all words of TheSentence
             let colorScale = chroma.scale([primaryColor, secondaryColor]).colors(4);
             words.forEach((wordList, index) => {
                 views.push(
@@ -38,8 +62,13 @@ export default class TheSentence extends React.Component {
                     </MadLibText>
                 );
             });
-            return <View style={styles.container}>{views}</View>;
         }
+
+        return (
+            <ScrollView style={styles.container}>
+                <View style={styles.contentWrapper}>{views}</View>
+            </ScrollView>
+        );
     };
     render = () => (
         <React.Fragment>
@@ -52,9 +81,12 @@ export default class TheSentence extends React.Component {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: bgColorBlack,
+    },
+    contentWrapper: {
         flexDirection: "column",
         alignItems: "flex-start",
-        padding: 16,
-        paddingTop: 8
+        marginBottom: 120,
+        paddingHorizontal: 16,
+        paddingVertical: 8
     }
 });

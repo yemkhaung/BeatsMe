@@ -77,6 +77,7 @@ export default class BeatMeMain extends React.Component {
                 "/tracks/top?apikey=NzJiMTMzYjQtZDUwMi00ODU1LTljNTYtYWQzODM5YTI0ZGQ2"
         ).then(data => {
             data.json().then(dataJSON => {
+                // console.log("DataJSON >>> ", dataJSON.tracks[0], "...");
                 this.setState({ tracks: dataJSON.tracks });
                 // Animated.timing(this.state.isPlaylistViewVisible, {
                 //     toValue: 0,
@@ -89,8 +90,19 @@ export default class BeatMeMain extends React.Component {
     };
 
     _editSentence = index => {
+        console.log("_editSentence: ", index);
         this.setState({
             editWordIndex: index
+        });
+    };
+
+    _updateWordChoice = index => {
+        console.log("_updateWordChoice: ", index);
+        this.setState(prevState => {
+            const newState = { ...prevState };
+            newState.wordChoiceIndices[prevState.editWordIndex] = index;
+            newState.editWordIndex = null;
+            return newState;
         });
     };
 
@@ -123,7 +135,12 @@ export default class BeatMeMain extends React.Component {
                                     onHide={this._hidePLayerPlayList}
                                 />
                             ) : (
-                                <TheSentence wordChoices={this.state.wordChoiceIndices} onEditSentence={this._editSentence} />
+                                <TheSentence
+                                    wordChoices={this.state.wordChoiceIndices}
+                                    editWordIndex={this.state.editWordIndex}
+                                    onEditSentence={this._editSentence}
+                                    onChooseWord={this._updateWordChoice}
+                                />
                             )}
                             <Player
                                 playingTrack={this.state.playingTrack}
